@@ -1,10 +1,18 @@
 import 'package:flutter/material.dart';
-import 'package:quiz_app/quiz.dart';
+import 'package:quizapp/quiz.dart';
 import 'package:http/http.dart' as http;
 import 'dart:convert';
 import 'package:html_unescape/html_unescape.dart';
 
 void main() => runApp(MyApp());
+
+Future<List<Results>> fetchQuestions() async {
+  const url = "https://opentdb.com/api.php?amount=20";
+  var res = await http.get(url);
+  var parsedRes = jsonDecode(res.body);
+  var quiz = Quiz.fromJson(parsedRes);
+  return quiz.results;
+}
 
 class MyApp extends StatelessWidget {
   @override
@@ -17,87 +25,7 @@ class MyApp extends StatelessWidget {
   }
 }
 
-class HomePage extends StatefulWidget {
-  HomePage({Key key}) : super(key: key);
-
-  @override
-  _HomePageState createState() => _HomePageState();
-}
-
-class _HomePageState extends State<HomePage> {
-  Quiz quiz;
-  List<Results> results;
-
-  Future<void> _fetchQuestions() async {
-    const url = "https://opentdb.com/api.php?amount=20";
-    try {
-      var res = await http.get(url);
-      var parsedRes = jsonDecode(res.body);
-      quiz = Quiz.fromJson(parsedRes);
-      results = quiz.results;
-    } on Exception catch (err) {
-      print(err);
-    }
-  }
-
-  ListView _buildQuestionList() {
-    return ListView.builder(
-        itemCount: results.length,
-        itemBuilder: (context, index) {
-          var curResult = results[index];
-          var avatarChar = curResult.type.startsWith("m") ? "M" : "B";
-          return Card(
-            color: Colors.white,
-            elevation: 0.0,
-            child: ExpansionTile(
-              title: Padding(
-                padding: const EdgeInsets.all(18.0),
-                child: Column(
-                  mainAxisAlignment: MainAxisAlignment.spaceEvenly,
-                  crossAxisAlignment: CrossAxisAlignment.start,
-                  children: [
-                    Text(
-                      HtmlUnescape().convert(curResult.question),
-                      style: TextStyle(
-                          fontSize: 18.0, fontWeight: FontWeight.bold),
-                    ),
-                    FittedBox(
-                      child: Row(
-                        mainAxisAlignment: MainAxisAlignment.spaceBetween,
-                        children: [
-                          FilterChip(
-                            label: Text(
-                              curResult.category,
-                            ),
-                            backgroundColor: Colors.grey[100],
-                            onSelected: null,
-                          ),
-                          SizedBox(width: 10.0),
-                          FilterChip(
-                            label: Text(
-                              curResult.difficulty,
-                            ),
-                            backgroundColor: Colors.grey[100],
-                            onSelected: null,
-                          )
-                        ],
-                      ),
-                    )
-                  ],
-                ),
-              ),
-              leading: CircleAvatar(
-                backgroundColor: Colors.grey[100],
-                child: Text(avatarChar),
-              ),
-              children: curResult.allAnswers
-                  .map((answer) => Answer(answer: answer, results: curResult))
-                  .toList(),
-            ),
-          );
-        });
-  }
-
+class HomePage extends StatelessWidget {
   @override
   Widget build(BuildContext context) {
     return Scaffold(
@@ -106,28 +34,109 @@ class _HomePageState extends State<HomePage> {
         elevation: 0.0,
         centerTitle: true,
       ),
-      body: RefreshIndicator(
-        onRefresh: _fetchQuestions,
-        child: FutureBuilder(
-            future: _fetchQuestions(),
-            builder: (BuildContext context, AsyncSnapshot snapshot) {
-              switch (snapshot.connectionState) {
-                case ConnectionState.none:
-                  return Center(child: Text('press here to start.'));
+      body: FutureBuilder<List<Results>>(
+          future: fetchQuestions(),
+          builder:
+              (BuildContext context, AsyncSnapshot<List<Results>> snapshot) {
+            switch (snapshot.connectionState) {
+              case ConnectionState.none:
+                return Center(child: Text('press here to start.'));
 
-                case ConnectionState.active:
-                case ConnectionState.waiting:
-                  return Center(child: CircularProgressIndicator());
+              case ConnectionState.active:
+              case ConnectionState.waiting:
+                return Center(child: CircularProgressIndicator());
 
-                case ConnectionState.done:
-                  if (snapshot.hasError) {
-                    return Container();
-                  }
-                  return _buildQuestionList();
-              }
-              return Container();
-            }),
-      ),
+              case ConnectionState.done:
+                if (snapshot.hasError) {
+                  return Container();
+                }
+                return QuestionListBuilder(results: snapshot.data);
+            }
+            return Container();
+          }),
+    );
+  }
+}
+
+class QuestionListBuilder extends StatefulWidget {
+  QuestionListBuilder({Key key, this.results}) : super(key: key);
+
+  final results;
+
+  @override
+  _QuestionListBuilderState createState() =>
+      _QuestionListBuilderState(results: results);
+}
+
+class _QuestionListBuilderState extends State<QuestionListBuilder> {
+  _QuestionListBuilderState({this.results});
+
+  List<Results> results;
+
+  Future<void> _refresh() async {
+    results = await fetchQuestions();
+    setState(() {});
+  }
+
+  @override
+  Widget build(BuildContext context) {
+    return RefreshIndicator(
+      onRefresh: _refresh,
+      child: ListView.builder(
+          itemCount: results.length,
+          itemBuilder: (context, index) {
+            var curResult = results[index];
+            var avatarChar = curResult.type.startsWith("m") ? "M" : "B";
+            return Card(
+              color: Colors.white,
+              elevation: 0.0,
+              child: ExpansionTile(
+                title: Padding(
+                  padding: const EdgeInsets.all(18.0),
+                  child: Column(
+                    mainAxisAlignment: MainAxisAlignment.spaceEvenly,
+                    crossAxisAlignment: CrossAxisAlignment.start,
+                    children: [
+                      Text(
+                        HtmlUnescape().convert(curResult.question),
+                        style: TextStyle(
+                            fontSize: 18.0, fontWeight: FontWeight.bold),
+                      ),
+                      FittedBox(
+                        child: Row(
+                          mainAxisAlignment: MainAxisAlignment.spaceBetween,
+                          children: [
+                            FilterChip(
+                              label: Text(
+                                curResult.category,
+                              ),
+                              backgroundColor: Colors.grey[100],
+                              onSelected: null,
+                            ),
+                            SizedBox(width: 10.0),
+                            FilterChip(
+                              label: Text(
+                                curResult.difficulty,
+                              ),
+                              backgroundColor: Colors.grey[100],
+                              onSelected: null,
+                            )
+                          ],
+                        ),
+                      )
+                    ],
+                  ),
+                ),
+                leading: CircleAvatar(
+                  backgroundColor: Colors.grey[100],
+                  child: Text(avatarChar),
+                ),
+                children: curResult.allAnswers
+                    .map((answer) => Answer(answer: answer, results: curResult))
+                    .toList(),
+              ),
+            );
+          }),
     );
   }
 }
