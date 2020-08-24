@@ -25,7 +25,36 @@ class MyApp extends StatelessWidget {
   }
 }
 
-class HomePage extends StatelessWidget {
+class HomePage extends StatefulWidget {
+  @override
+  _HomePageState createState() => _HomePageState();
+}
+
+class _HomePageState extends State<HomePage> {
+  Center errPage() {
+    return Center(
+      child: Padding(
+        padding: const EdgeInsets.all(12.0),
+        child: Column(
+          mainAxisAlignment: MainAxisAlignment.center,
+          crossAxisAlignment: CrossAxisAlignment.center,
+          children: [
+            Text('Error: Network Error'),
+            SizedBox(
+              height: 20.0,
+            ),
+            RaisedButton(
+              child: Text('Try Again'),
+              onPressed: () {
+                setState(() {});
+              },
+            )
+          ],
+        ),
+      ),
+    );
+  }
+
   @override
   Widget build(BuildContext context) {
     return Scaffold(
@@ -48,11 +77,11 @@ class HomePage extends StatelessWidget {
 
               case ConnectionState.done:
                 if (snapshot.hasError) {
-                  return Container();
+                  return errPage();
                 }
                 return QuestionListBuilder(results: snapshot.data);
             }
-            return Container();
+            return null;
           }),
     );
   }
