@@ -1,208 +1,60 @@
 import 'package:flutter/material.dart';
-import 'package:quizapp/quiz.dart';
-import 'package:http/http.dart' as http;
-import 'dart:convert';
-import 'package:html_unescape/html_unescape.dart';
+import 'package:Apps/apps/demo/main.dart';
 
-void main() => runApp(MyApp());
+import 'apps/quiz/main.dart';
 
-Future<List<Results>> fetchQuestions() async {
-  const url = "https://opentdb.com/api.php?amount=20";
-  var res = await http.get(url);
-  var parsedRes = jsonDecode(res.body);
-  var quiz = Quiz.fromJson(parsedRes);
-  return quiz.results;
-}
+void main() => runApp(MainApp());
 
-class MyApp extends StatelessWidget {
+class MainApp extends StatelessWidget {
   @override
   Widget build(BuildContext context) {
     return MaterialApp(
-      home: HomePage(),
+      home: MainPage(),
       debugShowCheckedModeBanner: false,
       theme: ThemeData(primaryColor: Colors.white),
     );
   }
 }
 
-class HomePage extends StatefulWidget {
+class MainPage extends StatelessWidget {
   @override
-  _HomePageState createState() => _HomePageState();
-}
-
-class _HomePageState extends State<HomePage> {
-  Center errPage() {
-    return Center(
-      child: Padding(
-        padding: const EdgeInsets.all(12.0),
-        child: Column(
+  Widget build(BuildContext context) {
+    return Scaffold(
+      appBar: AppBar(title: Text('Apps')),
+      body: AppList(),
+      bottomNavigationBar: SafeArea(
+        child: Row(
           mainAxisAlignment: MainAxisAlignment.center,
-          crossAxisAlignment: CrossAxisAlignment.center,
-          children: [
-            Text('Error: Network Error'),
-            SizedBox(
-              height: 20.0,
-            ),
-            RaisedButton(
-              child: Text('Try Again'),
-              onPressed: () {
-                setState(() {});
-              },
-            )
-          ],
+          children: [Text('Powered by wingsico')],
         ),
       ),
     );
   }
+}
+
+class AppList extends StatelessWidget {
+  final Map<String, Widget> apps = {
+    "DemoApp": DemoScreen(),
+    "QuizApp": QuizApp(),
+  };
 
   @override
   Widget build(BuildContext context) {
-    return Scaffold(
-      appBar: AppBar(
-        title: Text('Quiz App'),
-        elevation: 0.0,
-        centerTitle: true,
+    var appNames = apps.keys.toList();
+    return ListView.separated(
+      separatorBuilder: (context, index) => Padding(
+        padding: const EdgeInsets.only(left: 12.0, right: 12.0),
+        child: Container(height: 1, color: Colors.grey[300]),
       ),
-      body: FutureBuilder<List<Results>>(
-          future: fetchQuestions(),
-          builder:
-              (BuildContext context, AsyncSnapshot<List<Results>> snapshot) {
-            switch (snapshot.connectionState) {
-              case ConnectionState.none:
-                return Center(child: Text('press here to start.'));
-
-              case ConnectionState.active:
-              case ConnectionState.waiting:
-                return Center(child: CircularProgressIndicator());
-
-              case ConnectionState.done:
-                if (snapshot.hasError) {
-                  return errPage();
-                }
-                return QuestionListBuilder(results: snapshot.data);
-            }
-            return null;
-          }),
-    );
-  }
-}
-
-class QuestionListBuilder extends StatefulWidget {
-  QuestionListBuilder({Key key, this.results}) : super(key: key);
-
-  final results;
-
-  @override
-  _QuestionListBuilderState createState() =>
-      _QuestionListBuilderState(results: results);
-}
-
-class _QuestionListBuilderState extends State<QuestionListBuilder> {
-  _QuestionListBuilderState({this.results});
-
-  List<Results> results;
-
-  Future<void> _refresh() async {
-    results = await fetchQuestions();
-    setState(() {});
-  }
-
-  @override
-  Widget build(BuildContext context) {
-    return RefreshIndicator(
-      onRefresh: _refresh,
-      child: ListView.builder(
-          itemCount: results.length,
-          itemBuilder: (context, index) {
-            var curResult = results[index];
-            var avatarChar = curResult.type.startsWith("m") ? "M" : "B";
-            return Card(
-              color: Colors.white,
-              elevation: 0.0,
-              child: ExpansionTile(
-                title: Padding(
-                  padding: const EdgeInsets.all(18.0),
-                  child: Column(
-                    mainAxisAlignment: MainAxisAlignment.spaceEvenly,
-                    crossAxisAlignment: CrossAxisAlignment.start,
-                    children: [
-                      Text(
-                        HtmlUnescape().convert(curResult.question),
-                        style: TextStyle(
-                            fontSize: 18.0, fontWeight: FontWeight.bold),
-                      ),
-                      FittedBox(
-                        child: Row(
-                          mainAxisAlignment: MainAxisAlignment.spaceBetween,
-                          children: [
-                            FilterChip(
-                              label: Text(
-                                curResult.category,
-                              ),
-                              backgroundColor: Colors.grey[100],
-                              onSelected: null,
-                            ),
-                            SizedBox(width: 10.0),
-                            FilterChip(
-                              label: Text(
-                                curResult.difficulty,
-                              ),
-                              backgroundColor: Colors.grey[100],
-                              onSelected: null,
-                            )
-                          ],
-                        ),
-                      )
-                    ],
-                  ),
-                ),
-                leading: CircleAvatar(
-                  backgroundColor: Colors.grey[100],
-                  child: Text(avatarChar),
-                ),
-                children: curResult.allAnswers
-                    .map((answer) => Answer(answer: answer, results: curResult))
-                    .toList(),
-              ),
-            );
-          }),
-    );
-  }
-}
-
-class Answer extends StatefulWidget {
-  final String answer;
-  final Results results;
-
-  Answer({Key key, this.answer, this.results}) : super(key: key);
-
-  @override
-  _AnswerState createState() => _AnswerState();
-}
-
-class _AnswerState extends State<Answer> {
-  Color color;
-
-  void _judge() {
-    final nextColor = widget.answer == widget.results.correctAnswer
-        ? Colors.green
-        : Colors.red;
-    if (nextColor != color) {
-      setState(() {
-        color = nextColor;
-      });
-    }
-  }
-
-  @override
-  Widget build(BuildContext context) {
-    return ListTile(
-      onTap: _judge,
-      title: Text(
-        widget.answer,
-        textAlign: TextAlign.center,
-        style: TextStyle(
-            fontSize: 16.0, fontWeight: FontWeight.bold, color: color),
+      itemCount: appNames.length,
+      itemBuilder: (context, index) => ListTile(
+        title: Text(appNames[index],
+            style: TextStyle(fontWeight: FontWeight.bold, fontSize: 18.0)),
+        trailing: Icon(Icons.chevron_right, size: 32.0, color: Colors.blue),
+        onTap: () {
+          Navigator.push(context,
+              MaterialPageRoute(builder: (context) => apps[appNames[index]]));
+        },
       ),
     );
   }
