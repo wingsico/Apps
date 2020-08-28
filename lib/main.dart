@@ -1,6 +1,7 @@
 import 'package:flutter/material.dart';
 import 'package:Apps/apps/demo/main.dart';
 
+import 'apps/demo/screens/first_screen.dart';
 import 'apps/quiz/main.dart';
 
 void main() => runApp(MainApp());
@@ -9,10 +10,14 @@ class MainApp extends StatelessWidget {
   @override
   Widget build(BuildContext context) {
     return MaterialApp(
-      home: MainPage(),
-      debugShowCheckedModeBanner: false,
-      theme: ThemeData(primaryColor: Colors.white),
-    );
+        home: MainPage(),
+        debugShowCheckedModeBanner: false,
+        theme: ThemeData(primaryColor: Colors.white),
+        routes: {
+          '/demo_app': (BuildContext context) => DemoScreen(),
+          '/demo_app/first_screen': (BuildContext context) => FirstScreen(),
+          '/quiz_app': (BuildContext context) => QuizApp(),
+        });
   }
 }
 
@@ -25,7 +30,12 @@ class MainPage extends StatelessWidget {
       bottomNavigationBar: SafeArea(
         child: Row(
           mainAxisAlignment: MainAxisAlignment.center,
-          children: [Text('Powered by wingsico')],
+          children: [
+            Padding(
+              padding: const EdgeInsets.all(8.0),
+              child: Text('Powered by wingsico'),
+            )
+          ],
         ),
       ),
     );
@@ -33,9 +43,9 @@ class MainPage extends StatelessWidget {
 }
 
 class AppList extends StatelessWidget {
-  final Map<String, Widget> apps = {
-    "DemoApp": DemoScreen(),
-    "QuizApp": QuizApp(),
+  final Map<String, String> apps = {
+    "DemoApp": '/demo_app',
+    "QuizApp": '/quiz_app',
   };
 
   @override
@@ -52,8 +62,7 @@ class AppList extends StatelessWidget {
             style: TextStyle(fontWeight: FontWeight.bold, fontSize: 18.0)),
         trailing: Icon(Icons.chevron_right, size: 32.0, color: Colors.blue),
         onTap: () {
-          Navigator.push(context,
-              MaterialPageRoute(builder: (context) => apps[appNames[index]]));
+          Navigator.of(context).pushNamed(apps[appNames[index]]);
         },
       ),
     );
