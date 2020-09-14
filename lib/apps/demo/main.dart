@@ -6,23 +6,12 @@ class DemoScreen extends StatelessWidget {
     return Scaffold(
       appBar: AppBar(title: Text('DemoApp')),
       body: DemoList(),
-      floatingActionButton: FloatingActionButton(
-          child: Icon(Icons.keyboard_arrow_right),
-          onPressed: () {
-            final routeName = '/demo_app/first_screen';
-            // push导航
-            // Navigator.of(context).pushNamed(routeName);
-            // replace导航
-            // Navigator.pushReplacementNamed(context, routeName);
-            // push and pop, 体验有点差
-            Navigator.of(context).popAndPushNamed(routeName);
-          }),
     );
   }
 }
 
 class DemoList extends StatelessWidget {
-  final demoList = {'Route': '', 'Redux': ''};
+  final demoList = {'Route': '', 'Redux': '', 'Widgets': '/demo_app/widgets'};
 
   @override
   Widget build(BuildContext context) {

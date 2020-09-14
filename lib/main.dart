@@ -1,7 +1,8 @@
 import 'package:flutter/material.dart';
 import 'package:Apps/apps/demo/main.dart';
 
-import 'apps/demo/screens/first_screen.dart';
+import 'apps/demo/screens/container.dart';
+import 'apps/demo/screens/widgets.dart';
 import 'apps/quiz/main.dart';
 
 void main() => runApp(MainApp());
@@ -15,7 +16,9 @@ class MainApp extends StatelessWidget {
         theme: ThemeData(primaryColor: Colors.white),
         routes: {
           '/demo_app': (BuildContext context) => DemoScreen(),
-          '/demo_app/first_screen': (BuildContext context) => FirstScreen(),
+          '/demo_app/widgets': (BuildContext context) => Widgets(),
+          '/demo_app/widgets/container': (BuildContext context) =>
+              ContainerDemo(),
           '/quiz_app': (BuildContext context) => QuizApp(),
         });
   }
