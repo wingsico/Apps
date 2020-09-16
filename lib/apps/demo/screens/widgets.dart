@@ -27,8 +27,9 @@ class WidgetsList extends StatelessWidget {
           return ListTile(
             title: Text(widgetsEntity[index].key),
             onTap: () => {
-              Navigator.of(context)
-                  .pushNamed('$prefix${widgetsEntity[index].value}')
+              Navigator.of(context).pushNamed(
+                  '$prefix${widgetsEntity[index].value}',
+                  arguments: widgetsEntity[index].key)
             },
           );
         });

@@ -1,6 +1,9 @@
 import 'package:flutter/material.dart';
 
 class ContainerDemo extends StatelessWidget {
+  final String text;
+  const ContainerDemo({this.text});
+
   @override
   Widget build(BuildContext context) {
     return Scaffold(
@@ -11,7 +14,7 @@ class ContainerDemo extends StatelessWidget {
           height: 300,
           padding: EdgeInsets.all(10.0),
           decoration: BoxDecoration(color: Colors.black12),
-          child: Text('Hello', style: TextStyle(color: Colors.white)),
+          child: Text('$text', style: TextStyle(color: Colors.white)),
         ),
       ),
     );
