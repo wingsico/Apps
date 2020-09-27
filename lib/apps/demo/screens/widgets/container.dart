@@ -1,8 +1,8 @@
 import 'package:flutter/material.dart';
 
-class ContainerDemo extends StatelessWidget {
+class ContainerScreen extends StatelessWidget {
   final String text;
-  const ContainerDemo({this.text});
+  const ContainerScreen({this.text});
 
   @override
   Widget build(BuildContext context) {

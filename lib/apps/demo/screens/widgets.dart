@@ -1,37 +1,20 @@
+import 'package:Apps/components/route_list.dart';
+import 'package:Apps/router/route_type.dart';
 import 'package:flutter/material.dart';
 
-class Widgets extends StatelessWidget {
+class WidgetScreen extends StatelessWidget {
+  final Routes routes = Routes(
+    routes: {
+      'Container': '/container',
+      'Cupertino': '/cupertino',
+    },
+    prefix: "/demo_app/widgets",
+  );
   @override
   Widget build(BuildContext context) {
     return Scaffold(
-        appBar: AppBar(centerTitle: true, title: Text('Widgets')),
-        body: WidgetsList(prefix: '/demo_app/widgets'));
-  }
-}
-
-class WidgetsList extends StatelessWidget {
-  final widgets = {
-    'Container': '/container',
-  };
-
-  final String prefix;
-
-  WidgetsList({this.prefix, Key key}) : super(key: key);
-
-  @override
-  Widget build(BuildContext ctx) {
-    final widgetsEntity = widgets.entries.toList();
-    return ListView.builder(
-        itemCount: widgetsEntity.length,
-        itemBuilder: (context, index) {
-          return ListTile(
-            title: Text(widgetsEntity[index].key),
-            onTap: () => {
-              Navigator.of(context).pushNamed(
-                  '$prefix${widgetsEntity[index].value}',
-                  arguments: widgetsEntity[index].key)
-            },
-          );
-        });
+      appBar: AppBar(centerTitle: true, title: Text('Widgets')),
+      body: RouteList(routes),
+    );
   }
 }
