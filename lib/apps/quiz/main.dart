@@ -87,22 +87,59 @@ class QuestionListBuilder extends StatefulWidget {
   final results;
 
   @override
-  _QuestionListBuilderState createState() =>
-      _QuestionListBuilderState(results: results);
+  _QuestionListBuilderState createState() => _QuestionListBuilderState();
 }
 
 class _QuestionListBuilderState extends State<QuestionListBuilder> {
-  _QuestionListBuilderState({this.results});
-
   List<Results> results;
 
+  @override
+  void initState() {
+    super.initState();
+    results = widget.results;
+    print('initState');
+  }
+
+  @override
+  void didUpdateWidget(QuestionListBuilder oldWidget) {
+    super.didUpdateWidget(oldWidget);
+    print('didUpdateWidget');
+  }
+
+  @override
+  deactivate() {
+    super.deactivate();
+    print('deactivate');
+  }
+
+  @override
+  dispose() {
+    super.dispose();
+    print('dispose');
+  }
+
+  @override
+  void reassemble() {
+    super.reassemble();
+    print('reassemble');
+  }
+
+  @override
+  void didChangeDependencies() {
+    super.didChangeDependencies();
+    print('didChangeDependencies');
+  }
+
   Future<void> _refresh() async {
-    results = await fetchQuestions();
-    setState(() {});
+    final _results = await fetchQuestions();
+    setState(() {
+      results = _results;
+    });
   }
 
   @override
   Widget build(BuildContext context) {
+    print('build');
     return RefreshIndicator(
       onRefresh: _refresh,
       child: ListView.builder(
