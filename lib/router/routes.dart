@@ -1,4 +1,6 @@
 import 'package:Apps/apps/demo/main.dart';
+import 'package:Apps/apps/demo/screens/practices.dart';
+import 'package:Apps/apps/demo/screens/practices/xfl_demo.dart';
 import 'package:Apps/apps/demo/screens/widgets.dart';
 import 'package:Apps/apps/demo/screens/widgets/container.dart';
 import 'package:Apps/apps/demo/screens/widgets/curpertinao.dart';
@@ -16,5 +18,7 @@ Map<String, RouteMeta> mainRoutes = {
   '/demo_app/widgets': RouteMeta((arg) => WidgetScreen()),
   '/demo_app/widgets/container': RouteMeta((arg) => ContainerScreen()),
   '/demo_app/widgets/cupertino': RouteMeta((arg) => CupertinoScreen()),
+  '/demo_app/practices': RouteMeta((arg) => PracticeScreen()),
+  '/demo_app/practices/xfl_demo': RouteMeta((arg) => PracticeOfXFLScreen()),
   '/quiz_app': RouteMeta((arg) => QuizApp(), [AuthType.Admin])
 };
