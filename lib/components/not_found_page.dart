@@ -15,7 +15,7 @@ class NotFoundPage extends StatelessWidget {
         child: Column(
           mainAxisAlignment: MainAxisAlignment.center,
           children: [
-            Image.asset('images/404.png'),
+            Image.asset('assets/images/404.png'),
             Padding(
               padding: const EdgeInsets.fromLTRB(20, 20, 20, 0),
               child: Text.rich(
