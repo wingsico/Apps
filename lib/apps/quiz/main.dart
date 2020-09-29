@@ -102,8 +102,8 @@ class _QuestionListBuilderState extends State<QuestionListBuilder> {
 
   @override
   void didUpdateWidget(QuestionListBuilder oldWidget) {
-    super.didUpdateWidget(oldWidget);
     print('didUpdateWidget');
+    super.didUpdateWidget(oldWidget);
   }
 
   @override
