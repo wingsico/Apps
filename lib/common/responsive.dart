@@ -1,12 +1,13 @@
 import 'dart:ui';
 
-class SizeFit {
+class Responsive {
   static double physicalWidth;
   static double physicalHeight;
   static double dpr;
   static double screenWidth;
   static double screenHeight;
   static double statusHeight;
+  static double bottomHeight;
 
   static double rpx;
 
@@ -23,9 +24,12 @@ class SizeFit {
     screenHeight = physicalHeight / dpr;
 
     // 4.状态栏的高度
-    statusHeight = window.padding.top;
+    statusHeight = window.padding.top / dpr;
 
-    // 5.计算rpx的大小
+    // 5.底部菜单按钮的高度
+    bottomHeight = window.padding.bottom / dpr;
+
+    // 6.计算rpx的大小
     rpx = screenWidth / 750;
   }
 

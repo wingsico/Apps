@@ -7,7 +7,8 @@ class Global {
   static AuthType currentAuth;
   static GlobalKey<ScaffoldState> key = GlobalKey<ScaffoldState>();
 
-  static init() {
+  static init() async {
+    await Future.delayed(Duration(seconds: 1));
     updateAuthType(AuthType.Anonymous);
   }
 

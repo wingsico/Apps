@@ -1,6 +1,6 @@
 import 'package:Apps/common/auth.dart';
 import 'package:Apps/common/global.dart';
-import 'package:Apps/common/size_fit.dart';
+import 'package:Apps/common/responsive.dart';
 import 'package:flutter/material.dart';
 
 class ErrorAuthPage extends StatelessWidget {
@@ -57,7 +57,7 @@ class ErrorAuthPage extends StatelessWidget {
             ),
           ),
           Container(
-            width: SizeFit.physicalWidth,
+            width: Responsive.physicalWidth,
             child: Column(
               mainAxisAlignment: MainAxisAlignment.center,
               crossAxisAlignment: CrossAxisAlignment.center,
