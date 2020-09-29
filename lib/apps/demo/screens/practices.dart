@@ -4,8 +4,8 @@ import 'package:flutter/material.dart';
 
 class PracticeScreen extends StatelessWidget {
   final Routes routes = Routes(
-    routes: {
-      '幸福里精选好房': '/xfl_demo',
+    {
+      'CustomTabbar': RoutePayload('/tabbar'),
     },
     prefix: "/demo_app/practices",
   );

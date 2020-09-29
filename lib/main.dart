@@ -1,39 +1,42 @@
 import 'package:flutter/material.dart';
 import 'common/auth.dart';
 import 'common/global.dart';
-import 'common/size_fit.dart';
+import 'common/responsive.dart';
 import 'components/error_auth_page.dart';
 import 'components/not_found_page.dart';
 import 'components/route_list.dart';
 import 'router/route_type.dart';
 import 'router/routes.dart';
 
-void main() {
-  Global.init();
+void main() async {
+  await Global.init();
   runApp(MainApp());
 }
 
 class MainApp extends StatelessWidget {
   @override
   Widget build(BuildContext context) {
-    SizeFit.init(); // 只能在 build 中初始化
+    Responsive.init(); // 只能在 build 中初始化
     return MaterialApp(
       initialRoute: mainInitialRoute,
       debugShowCheckedModeBanner: false,
       theme: ThemeData(primaryColor: Colors.white),
       onGenerateRoute: (RouteSettings settings) {
-        return MaterialPageRoute(builder: (context) {
-          String routeName = settings.name;
-          RouteMeta currentRouteMeta = mainRoutes[routeName];
-          if (currentRouteMeta == null) {
-            return NotFoundPage(routeName);
-          }
-          AuthType currentAuth = Global.currentAuth;
-          if (currentAuth.checkAuth(currentRouteMeta.auths)) {
-            return currentRouteMeta.widget(settings.arguments);
-          }
-          return ErrorAuthPage(currentRouteMeta.auths);
-        });
+        return MaterialPageRoute(
+          settings: settings,
+          builder: (context) {
+            String routeName = settings.name;
+            RouteMeta currentRouteMeta = mainRoutes[routeName];
+            if (currentRouteMeta == null) {
+              return NotFoundPage(routeName);
+            }
+            AuthType currentAuth = Global.currentAuth;
+            if (currentAuth.checkAuth(currentRouteMeta.auths)) {
+              return currentRouteMeta.widget(context);
+            }
+            return ErrorAuthPage(currentRouteMeta.auths);
+          },
+        );
       },
       // routes: {
       //   '/': (context) => MainPage(),
@@ -72,9 +75,9 @@ class MainPage extends StatelessWidget {
 }
 
 class AppList extends StatelessWidget {
-  final Routes appRoutes = Routes(routes: {
-    "DemoApp": '/demo_app',
-    "QuizApp": '/quiz_app',
+  final Routes appRoutes = Routes({
+    "DemoApp": RoutePayload('/demo_app'),
+    "QuizApp": RoutePayload('/quiz_app'),
   });
 
   AppList({Key key}) : super(key: key);

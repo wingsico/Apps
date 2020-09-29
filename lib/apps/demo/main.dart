@@ -4,9 +4,9 @@ import 'package:flutter/material.dart';
 
 class DemoApp extends StatelessWidget {
   final routes = Routes(
-    routes: {
-      'Widgets': '/widgets',
-      'Pratices': '/practices',
+    {
+      'Widgets': RoutePayload('/widgets'),
+      'Pratices': RoutePayload('/practices'),
     },
     prefix: '/demo_app',
   );

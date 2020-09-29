@@ -4,16 +4,16 @@ import 'package:flutter/material.dart';
 
 class WidgetScreen extends StatelessWidget {
   final Routes routes = Routes(
-    routes: {
-      'Container': '/container',
-      'Cupertino': '/cupertino',
+    {
+      'Container': RoutePayload('/container', arguments: {"text": "123"}),
+      'Cupertino': RoutePayload('/cupertino'),
     },
     prefix: "/demo_app/widgets",
   );
   @override
   Widget build(BuildContext context) {
     return Scaffold(
-      appBar: AppBar(centerTitle: true, title: Text('Widgets')),
+      appBar: AppBar(centerTitle: false, title: Text('Widgets')),
       body: RouteList(routes),
     );
   }

@@ -9,11 +9,15 @@ class RouteList extends StatelessWidget {
   build(BuildContext ctx) {
     return ListView.separated(
       itemBuilder: (ctx, index) {
+        final currentRoute = routes.list[index];
         return ListTile(
-          title: Text(routes.list[index].name),
+          title: Text(currentRoute.name),
           trailing: Icon(Icons.keyboard_arrow_right),
           onTap: () {
-            Navigator.of(ctx).pushNamed(routes.list[index].path);
+            Navigator.of(ctx).pushNamed(
+              currentRoute.payload.path,
+              arguments: currentRoute.payload.arguments,
+            );
           },
         );
       },

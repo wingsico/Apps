@@ -1,11 +1,11 @@
 import 'package:flutter/material.dart';
 
 class ContainerScreen extends StatelessWidget {
-  final String text;
-  const ContainerScreen({this.text});
-
   @override
   Widget build(BuildContext context) {
+    final Map<String, String> args = ModalRoute.of(context).settings.arguments;
+    final String text = args['text'];
+
     return Scaffold(
       appBar: AppBar(title: Text('Container Demo'), centerTitle: true),
       body: Center(
