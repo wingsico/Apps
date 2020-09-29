@@ -78,6 +78,7 @@ class AppList extends StatelessWidget {
   final Routes appRoutes = Routes({
     "DemoApp": RoutePayload('/demo_app'),
     "QuizApp": RoutePayload('/quiz_app'),
+    "PlantApp": RoutePayload('/plant_app'),
   });
 
   AppList({Key key}) : super(key: key);

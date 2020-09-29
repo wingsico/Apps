@@ -4,6 +4,7 @@ import 'package:Apps/apps/demo/screens/practices/tabbar.dart';
 import 'package:Apps/apps/demo/screens/widgets.dart';
 import 'package:Apps/apps/demo/screens/widgets/container.dart';
 import 'package:Apps/apps/demo/screens/widgets/curpertinao.dart';
+import 'package:Apps/apps/plant/main.dart';
 import 'package:Apps/apps/quiz/main.dart';
 import 'package:Apps/common/auth.dart';
 import 'package:Apps/router/route_type.dart';
@@ -20,5 +21,6 @@ Map<String, RouteMeta> mainRoutes = {
   '/demo_app/widgets/cupertino': RouteMeta((ctx) => CupertinoScreen()),
   '/demo_app/practices': RouteMeta((ctx) => PracticeScreen()),
   '/demo_app/practices/tabbar': RouteMeta((ctx) => CustomTabbarScreen()),
-  '/quiz_app': RouteMeta((ctx) => QuizApp(), auths: [AuthType.Admin])
+  '/quiz_app': RouteMeta((ctx) => QuizApp(), auths: [AuthType.Admin]),
+  '/plant_app': RouteMeta((ctx) => PlantApp()),
 };
